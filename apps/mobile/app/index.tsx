@@ -55,6 +55,16 @@ export default function Home() {
         </View>
       </View>
 
+      <Pressable
+        style={({ pressed }) => [styles.sellerBanner, pressed && styles.pressed]}
+        onPress={() => router.push(user?.roles?.includes('seller') ? '/seller' : '/seller/new')}
+      >
+        <Text style={styles.sellerBannerText}>
+          {user?.roles?.includes('seller') ? '🏪  Administrar mi tienda' : '🏪  Vender en BarriApp'}
+        </Text>
+        <Text style={styles.chevron}>›</Text>
+      </Pressable>
+
       <Text style={styles.section}>Tiendas cerca</Text>
       {(isLoading || isRefetching) && <ActivityIndicator />}
       {error && (
@@ -108,6 +118,16 @@ const styles = StyleSheet.create({
   },
   badgeText: { color: '#fff', fontSize: 11, fontWeight: '700' },
   link: { color: colors.primary, fontWeight: '600' },
+  sellerBanner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: '#eef6f0',
+    borderRadius: 12,
+    padding: 16,
+    marginTop: 12,
+  },
+  sellerBannerText: { fontSize: 15, fontWeight: '700', color: colors.primaryDark },
   section: { fontSize: 16, fontWeight: '700', marginTop: 16, color: colors.text },
   storeCard: {
     flexDirection: 'row',

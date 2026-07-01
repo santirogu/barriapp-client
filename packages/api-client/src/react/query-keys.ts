@@ -3,6 +3,7 @@ export const queryKeys = {
   me: () => ['me'] as const,
 
   stores: (params?: object) => ['stores', params ?? {}] as const,
+  myStores: () => ['stores', 'mine'] as const,
   store: (id: string) => ['stores', id] as const,
   storeProducts: (storeId: string, params?: object) =>
     ['stores', storeId, 'products', params ?? {}] as const,
