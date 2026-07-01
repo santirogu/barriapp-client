@@ -1,0 +1,47 @@
+# Keeps dependencies patched and opens PRs into `develop`.
+# Security updates (from Dependabot alerts) are raised regardless of the schedule.
+version: 2
+updates:
+  # JavaScript / TypeScript dependencies (npm — reads package.json + lockfile).
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+      timezone: "America/Bogota"
+    target-branch: "develop"
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "chore(deps)"
+    groups:
+      # Batch minor/patch bumps into one PR to reduce noise; majors stay separate.
+      js-minor-patch:
+        update-types:
+          - "minor"
+          - "patch"
+    ignore:
+      # Expo pins many packages to the current SDK; upgrade via `expo install --fix`
+      # / SDK upgrades instead of individual Dependabot bumps.
+      - dependency-name: "expo"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "react-native"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "react"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "react-dom"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "next"
+        update-types: ["version-update:semver-major"]
+
+  # GitHub Actions used by CI/security workflows.
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+      timezone: "America/Bogota"
+    target-branch: "develop"
+    commit-message:
+      prefix: "chore(ci)"
