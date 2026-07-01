@@ -38,3 +38,29 @@ jobs:
 
       - name: Test
         run: pnpm test
+
+  e2e:
+    name: Admin E2E (Playwright)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright browsers
+        run: pnpm --filter @barriapp/admin exec playwright install --with-deps chromium
+
+      - name: Run admin E2E
+        run: pnpm --filter @barriapp/admin test:e2e
