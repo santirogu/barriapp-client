@@ -12,6 +12,8 @@ export const queryKeys = {
   orders: (params?: object) => ['orders', params ?? {}] as const,
   order: (id: string) => ['orders', id] as const,
 
+  payment: (id: string) => ['payments', id] as const,
+
   errands: (params?: object) => ['errands', params ?? {}] as const,
   errand: (id: string) => ['errands', id] as const,
 

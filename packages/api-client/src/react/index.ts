@@ -18,6 +18,7 @@ export {
   useSocialLogin,
   useLogout,
 } from './auth';
+export { usePaymentIntent, usePayment } from './payments';
 export { useCreateReview, useStoreReviews } from './reviews';
 export {
   useNotifications,
