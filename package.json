@@ -1,0 +1,31 @@
+{
+  "name": "barriapp-client",
+  "version": "0.1.0",
+  "private": true,
+  "description": "BarriApp client monorepo — Expo mobile/web app + Next.js admin panel",
+  "packageManager": "pnpm@9.15.0",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "build": "turbo run build",
+    "mobile": "pnpm --filter @barriapp/mobile start",
+    "admin": "pnpm --filter @barriapp/admin dev",
+    "api:generate": "pnpm --filter @barriapp/api-client generate",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\""
+  },
+  "devDependencies": {
+    "@barriapp/config": "workspace:*",
+    "prettier": "^3.4.2",
+    "turbo": "^2.3.3",
+    "typescript": "^5.7.3"
+  },
+  "pnpm": {
+    "overrides": {
+      "eslint-plugin-react-hooks": "^5.1.0"
+    }
+  }
+}

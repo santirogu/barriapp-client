@@ -1,0 +1,31 @@
+{
+  "name": "@barriapp/admin",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "echo \"(admin) no tests yet\" && exit 0"
+  },
+  "dependencies": {
+    "@barriapp/api-client": "workspace:*",
+    "@barriapp/shared": "workspace:*",
+    "@tanstack/react-query": "^5.62.11",
+    "next": "14.2.21",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "zustand": "^5.0.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.17.10",
+    "@types/react": "~18.3.12",
+    "@types/react-dom": "~18.3.1",
+    "@eslint/eslintrc": "^3.2.0",
+    "eslint": "^9.17.0",
+    "eslint-config-next": "^15.1.3",
+    "typescript": "^5.7.3"
+  }
+}

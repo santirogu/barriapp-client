@@ -1,0 +1,26 @@
+{
+  "expo": {
+    "name": "BarriApp",
+    "slug": "barriapp",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "scheme": "barriapp",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.barriapp.app"
+    },
+    "android": {
+      "package": "com.barriapp.app"
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "single"
+    },
+    "plugins": ["expo-router", "expo-secure-store"],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
