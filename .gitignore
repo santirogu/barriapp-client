@@ -40,6 +40,10 @@ yarn-error.*
 
 # Testing
 coverage/
+test-results/
+playwright-report/
+blob-report/
+.playwright/
 
 # NOTE: packages/api-client/src/generated/schema.ts is intentionally COMMITTED
 # (regenerated via `pnpm api:generate`) so CI/build type-check without a live backend.
