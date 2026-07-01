@@ -1611,6 +1611,8 @@ export interface components {
             payment_method: components["schemas"]["PaymentMethod"];
             /** Collaborator Id */
             collaborator_id: string | null;
+            /** Delivery Id */
+            delivery_id?: string | null;
             /** Notes */
             notes: string | null;
             /**

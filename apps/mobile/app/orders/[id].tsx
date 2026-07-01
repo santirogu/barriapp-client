@@ -4,12 +4,15 @@ import { formatCOP } from '@barriapp/shared';
 import { ApiError } from '@barriapp/api-client';
 import { useOrder } from '@barriapp/api-client/react';
 import { colors } from '@/components/ui';
-import { ORDER_STATUS_LABEL, ORDER_STEPS } from '@/lib/status';
+import { DELIVERY_STATUS_LABEL, ORDER_STATUS_LABEL, ORDER_STEPS } from '@/lib/status';
+import { useDeliveryTracking } from '@/lib/useDeliveryTracking';
 
 export default function OrderDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
   // Poll every 5s so status changes (accept → preparing → …) show live.
   const { data: order, isLoading, error } = useOrder(id ?? '', { refetchInterval: 5000 });
+  // Live courier tracking once the order has a delivery (after assignment).
+  const tracking = useDeliveryTracking(order?.delivery_id ?? null);
 
   if (isLoading) {
     return (
@@ -53,6 +56,41 @@ export default function OrderDetail() {
               </View>
             );
           })}
+        </View>
+      )}
+
+      {order.delivery_id && (
+        <View style={styles.tracking}>
+          <View style={styles.trackingHeader}>
+            <Text style={styles.trackingTitle}>Seguimiento en vivo</Text>
+            <View style={styles.liveTag}>
+              <View
+                style={[styles.liveDot, tracking.connected ? styles.liveDotOn : styles.liveDotOff]}
+              />
+              <Text style={styles.liveTagText}>
+                {tracking.mode === 'ws' && tracking.connected
+                  ? 'En vivo'
+                  : tracking.mode === 'polling'
+                    ? 'Actualizando'
+                    : 'Conectando…'}
+              </Text>
+            </View>
+          </View>
+          {tracking.error ? (
+            <Text style={styles.muted}>{tracking.error}</Text>
+          ) : (
+            <>
+              <Text style={styles.trackingStatus}>
+                {tracking.status ? DELIVERY_STATUS_LABEL[tracking.status] : 'Esperando al repartidor…'}
+              </Text>
+              {tracking.lastPoint && (
+                <Text style={styles.muted}>
+                  Última ubicación del repartidor: {tracking.lastPoint[1].toFixed(5)},{' '}
+                  {tracking.lastPoint[0].toFixed(5)}
+                </Text>
+              )}
+            </>
+          )}
         </View>
       )}
 
@@ -117,6 +155,23 @@ const styles = StyleSheet.create({
   dotDone: { backgroundColor: colors.primary },
   stepLabel: { color: colors.muted, fontSize: 14 },
   stepLabelDone: { color: colors.text, fontWeight: '600' },
+  tracking: {
+    marginTop: 20,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: 12,
+    padding: 16,
+    gap: 6,
+    backgroundColor: '#f9fafb',
+  },
+  trackingHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+  trackingTitle: { fontSize: 15, fontWeight: '700', color: colors.text },
+  trackingStatus: { fontSize: 16, fontWeight: '600', color: colors.primaryDark },
+  liveTag: { flexDirection: 'row', alignItems: 'center', gap: 6 },
+  liveDot: { width: 8, height: 8, borderRadius: 4 },
+  liveDotOn: { backgroundColor: colors.primary },
+  liveDotOff: { backgroundColor: colors.muted },
+  liveTagText: { fontSize: 12, color: colors.muted, fontWeight: '600' },
   section: { fontSize: 16, fontWeight: '700', marginTop: 20, color: colors.text },
   itemRow: {
     flexDirection: 'row',
