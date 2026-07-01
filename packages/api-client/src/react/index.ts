@@ -45,6 +45,15 @@ export {
   useAssignedErrands,
   useErrandActions,
 } from './errands';
+export {
+  useAdminMetrics,
+  useAdminUsers,
+  useUpdateUserStatus,
+  useAuditLogs,
+  useAdminConfig,
+  useUpdateAdminConfig,
+} from './admin';
+export type { AdminUsersQuery, AuditLogsQuery, AuditModule } from './admin';
 export { usePaymentIntent, usePayment } from './payments';
 export { useCreateReview, useStoreReviews } from './reviews';
 export {
