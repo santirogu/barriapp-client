@@ -53,6 +53,8 @@ function RootNavigator() {
       <Stack.Screen name="seller/[storeId]/index" options={{ title: 'Gestionar tienda' }} />
       <Stack.Screen name="seller/[storeId]/products" options={{ title: 'Productos' }} />
       <Stack.Screen name="seller/[storeId]/orders" options={{ title: 'Pedidos de la tienda' }} />
+      <Stack.Screen name="collaborator/index" options={{ title: 'Modo repartidor' }} />
+      <Stack.Screen name="collaborator/apply" options={{ title: 'Ser repartidor' }} />
     </Stack>
   );
 }

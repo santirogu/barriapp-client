@@ -37,6 +37,7 @@ export type ErrandPublic = S['ErrandPublic'];
 export type ErrandCreate = S['ErrandCreate'];
 
 export type CollaboratorProfilePublic = S['CollaboratorProfilePublic'];
+export type BecomeCollaborator = S['BecomeCollaborator'];
 export type ReviewPublic = S['ReviewPublic'];
 export type ReviewCreate = S['ReviewCreate'];
 export type NotificationPublic = S['NotificationPublic'];
