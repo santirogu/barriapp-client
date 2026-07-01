@@ -46,6 +46,7 @@ function RootNavigator() {
       <Stack.Screen name="cart" options={{ title: 'Tu carrito', presentation: 'modal' }} />
       <Stack.Screen name="orders/index" options={{ title: 'Mis pedidos' }} />
       <Stack.Screen name="orders/[id]" options={{ title: 'Pedido' }} />
+      <Stack.Screen name="notifications" options={{ title: 'Notificaciones' }} />
     </Stack>
   );
 }

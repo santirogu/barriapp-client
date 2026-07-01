@@ -1,7 +1,7 @@
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { ApiError } from '@barriapp/api-client';
-import { useLogout, useStores } from '@barriapp/api-client/react';
+import { useLogout, useStores, useUnreadCount } from '@barriapp/api-client/react';
 import { Button, colors } from '@/components/ui';
 import { useSession } from '@/lib/api';
 
@@ -11,6 +11,7 @@ export default function Home() {
   const signOut = useSession((s) => s.signOut);
   const logout = useLogout();
   const { data: stores, isLoading, error, refetch, isRefetching } = useStores({ limit: 20 });
+  const { data: unread } = useUnreadCount({ refetchInterval: 15000 });
 
   async function onLogout() {
     try {
@@ -37,9 +38,21 @@ export default function Home() {
             ))}
           </View>
         </View>
-        <Pressable onPress={() => router.push('/orders')} hitSlop={8}>
-          <Text style={styles.link}>Mis pedidos</Text>
-        </Pressable>
+        <View style={styles.headerActions}>
+          <Pressable onPress={() => router.push('/notifications')} hitSlop={8}>
+            <View>
+              <Text style={styles.bell}>🔔</Text>
+              {!!unread?.unread && (
+                <View style={styles.badge}>
+                  <Text style={styles.badgeText}>{unread.unread > 9 ? '9+' : unread.unread}</Text>
+                </View>
+              )}
+            </View>
+          </Pressable>
+          <Pressable onPress={() => router.push('/orders')} hitSlop={8}>
+            <Text style={styles.link}>Mis pedidos</Text>
+          </Pressable>
+        </View>
       </View>
 
       <Text style={styles.section}>Tiendas cerca</Text>
@@ -79,7 +92,22 @@ const styles = StyleSheet.create({
   roles: { flexDirection: 'row', gap: 6, marginTop: 8, flexWrap: 'wrap' },
   chip: { backgroundColor: '#e7f5ec', paddingHorizontal: 10, paddingVertical: 4, borderRadius: 999 },
   chipText: { color: colors.primaryDark, fontSize: 12, fontWeight: '600' },
-  link: { color: colors.primary, fontWeight: '600', paddingTop: 4 },
+  headerActions: { flexDirection: 'row', alignItems: 'center', gap: 16, paddingTop: 4 },
+  bell: { fontSize: 22 },
+  badge: {
+    position: 'absolute',
+    top: -6,
+    right: -8,
+    minWidth: 18,
+    height: 18,
+    borderRadius: 9,
+    paddingHorizontal: 4,
+    backgroundColor: colors.danger,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  badgeText: { color: '#fff', fontSize: 11, fontWeight: '700' },
+  link: { color: colors.primary, fontWeight: '600' },
   section: { fontSize: 16, fontWeight: '700', marginTop: 16, color: colors.text },
   storeCard: {
     flexDirection: 'row',
