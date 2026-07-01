@@ -31,3 +31,27 @@ export const DELIVERY_STATUS_LABEL: Record<DeliveryStatus, string> = {
   en_route_dropoff: 'En camino a ti',
   delivered: 'Entregado',
 };
+
+/** Forward order of delivery statuses driven by the collaborator. */
+export const DELIVERY_STEPS: DeliveryStatus[] = [
+  'assigned',
+  'en_route_pickup',
+  'picked_up',
+  'en_route_dropoff',
+  'delivered',
+];
+
+/** The next status a collaborator can advance to, or null if delivered. */
+export function nextDeliveryStatus(current: DeliveryStatus): DeliveryStatus | null {
+  const i = DELIVERY_STEPS.indexOf(current);
+  return i >= 0 && i < DELIVERY_STEPS.length - 1 ? DELIVERY_STEPS[i + 1]! : null;
+}
+
+/** Verb for advancing to each delivery status (collaborator action label). */
+export const DELIVERY_ADVANCE_LABEL: Record<DeliveryStatus, string> = {
+  assigned: '',
+  en_route_pickup: 'Voy a la tienda',
+  picked_up: 'Recogí el pedido',
+  en_route_dropoff: 'En camino al cliente',
+  delivered: 'Entregué',
+};

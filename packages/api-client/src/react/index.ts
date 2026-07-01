@@ -29,6 +29,13 @@ export {
   useStoreOrders,
   useSellerOrderActions,
 } from './seller';
+export {
+  useCollaboratorMe,
+  useBecomeCollaborator,
+  useSetAvailability,
+  useCollaboratorJobs,
+  useDeliveryActions,
+} from './collaborator';
 export { usePaymentIntent, usePayment } from './payments';
 export { useCreateReview, useStoreReviews } from './reviews';
 export {
