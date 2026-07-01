@@ -1,4 +1,4 @@
-import type { DeliveryStatus, OrderStatus } from '@barriapp/shared';
+import type { DeliveryStatus, ErrandStatus, OrderStatus } from '@barriapp/shared';
 
 /** User-facing Spanish labels for order statuses. */
 export const ORDER_STATUS_LABEL: Record<OrderStatus, string> = {
@@ -54,4 +54,13 @@ export const DELIVERY_ADVANCE_LABEL: Record<DeliveryStatus, string> = {
   picked_up: 'Recogí el pedido',
   en_route_dropoff: 'En camino al cliente',
   delivered: 'Entregué',
+};
+
+/** User-facing Spanish labels for errand ("mandado") statuses. */
+export const ERRAND_STATUS_LABEL: Record<ErrandStatus, string> = {
+  open: 'Abierto',
+  assigned: 'Aceptado',
+  in_progress: 'En progreso',
+  completed: 'Completado',
+  cancelled: 'Cancelado',
 };

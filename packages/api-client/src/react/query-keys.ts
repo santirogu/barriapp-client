@@ -19,6 +19,8 @@ export const queryKeys = {
 
   errands: (params?: object) => ['errands', params ?? {}] as const,
   errand: (id: string) => ['errands', id] as const,
+  errandsAvailable: (near: string) => ['errands', 'available', near] as const,
+  errandsAssigned: () => ['errands', 'assigned'] as const,
 
   notifications: (params?: object) =>
     ['notifications', params ?? {}] as const,

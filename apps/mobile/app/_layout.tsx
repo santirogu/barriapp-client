@@ -55,6 +55,10 @@ function RootNavigator() {
       <Stack.Screen name="seller/[storeId]/orders" options={{ title: 'Pedidos de la tienda' }} />
       <Stack.Screen name="collaborator/index" options={{ title: 'Modo repartidor' }} />
       <Stack.Screen name="collaborator/apply" options={{ title: 'Ser repartidor' }} />
+      <Stack.Screen name="collaborator/errands" options={{ title: 'Mandados' }} />
+      <Stack.Screen name="errands/index" options={{ title: 'Mandados' }} />
+      <Stack.Screen name="errands/new" options={{ title: 'Nuevo mandado' }} />
+      <Stack.Screen name="errands/[id]" options={{ title: 'Mandado' }} />
     </Stack>
   );
 }
