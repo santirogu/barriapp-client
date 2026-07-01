@@ -68,6 +68,10 @@ export default function CollaboratorHome() {
       )}
 
       {approved && (
+        <Button title="🧺 Mandados disponibles" variant="ghost" onPress={() => router.push('/collaborator/errands')} />
+      )}
+
+      {approved && (
         <View style={styles.statusCard}>
           <View style={{ flex: 1 }}>
             <Text style={styles.statusTitle}>{online ? 'Estás en línea' : 'Estás desconectado'}</Text>

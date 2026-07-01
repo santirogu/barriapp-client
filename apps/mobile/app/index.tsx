@@ -75,6 +75,14 @@ export default function Home() {
         <Text style={styles.chevron}>›</Text>
       </Pressable>
 
+      <Pressable
+        style={({ pressed }) => [styles.sellerBanner, pressed && styles.pressed]}
+        onPress={() => router.push('/errands')}
+      >
+        <Text style={styles.sellerBannerText}>🧺  Mandados</Text>
+        <Text style={styles.chevron}>›</Text>
+      </Pressable>
+
       <Text style={styles.section}>Tiendas cerca</Text>
       {(isLoading || isRefetching) && <ActivityIndicator />}
       {error && (
