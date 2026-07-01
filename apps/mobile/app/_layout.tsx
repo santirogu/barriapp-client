@@ -38,7 +38,16 @@ function RootNavigator() {
     );
   }
 
-  return <Stack screenOptions={{ headerShown: false }} />;
+  return (
+    <Stack screenOptions={{ headerTintColor: '#166b3a' }}>
+      <Stack.Screen name="index" options={{ headerShown: false }} />
+      <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+      <Stack.Screen name="store/[id]" options={{ title: 'Tienda' }} />
+      <Stack.Screen name="cart" options={{ title: 'Tu carrito', presentation: 'modal' }} />
+      <Stack.Screen name="orders/index" options={{ title: 'Mis pedidos' }} />
+      <Stack.Screen name="orders/[id]" options={{ title: 'Pedido' }} />
+    </Stack>
+  );
 }
 
 export default function RootLayout() {
