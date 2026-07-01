@@ -97,6 +97,26 @@ export function ErrorText({ children }: { children: React.ReactNode }) {
   return <Text style={styles.error}>{children}</Text>;
 }
 
+export function Stars({
+  value,
+  onChange,
+  size = 30,
+}: {
+  value: number;
+  onChange?: (n: number) => void;
+  size?: number;
+}) {
+  return (
+    <View style={{ flexDirection: 'row', gap: 4 }}>
+      {[1, 2, 3, 4, 5].map((n) => (
+        <Pressable key={n} onPress={() => onChange?.(n)} disabled={!onChange} hitSlop={4}>
+          <Text style={{ fontSize: size, color: n <= value ? '#f5a623' : colors.border }}>★</Text>
+        </Pressable>
+      ))}
+    </View>
+  );
+}
+
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.bg },
   screen: { flex: 1, padding: 24, gap: 16, justifyContent: 'center' },

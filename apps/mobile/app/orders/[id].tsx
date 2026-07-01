@@ -4,6 +4,7 @@ import { formatCOP } from '@barriapp/shared';
 import { ApiError } from '@barriapp/api-client';
 import { useOrder } from '@barriapp/api-client/react';
 import { colors } from '@/components/ui';
+import { ReviewSection } from '@/components/ReviewSection';
 import { DELIVERY_STATUS_LABEL, ORDER_STATUS_LABEL, ORDER_STEPS } from '@/lib/status';
 import { useDeliveryTracking } from '@/lib/useDeliveryTracking';
 
@@ -116,6 +117,10 @@ export default function OrderDetail() {
         Pago: {order.payment_method === 'cash' ? 'Efectivo (contra entrega)' : 'Wompi'} · Comisión
         plataforma {formatCOP(order.amounts.platform_fee)}
       </Text>
+
+      {order.status === 'delivered' && (
+        <ReviewSection orderId={order.id} hasCollaborator={Boolean(order.collaborator_id)} />
+      )}
     </ScrollView>
   );
 }

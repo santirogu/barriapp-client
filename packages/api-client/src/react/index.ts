@@ -18,5 +18,12 @@ export {
   useSocialLogin,
   useLogout,
 } from './auth';
+export { useCreateReview, useStoreReviews } from './reviews';
+export {
+  useNotifications,
+  useUnreadCount,
+  useMarkNotificationRead,
+  useRegisterDeviceToken,
+} from './notifications';
 export { createSessionStore } from './session';
 export type { SessionState, SessionStatus, SessionStore } from './session';
