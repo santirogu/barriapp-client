@@ -44,7 +44,13 @@ export default function Cart() {
         payment_method: method,
       });
       clear();
-      router.replace(`/orders/${order.id}`);
+      // Wompi orders go to the payment screen (intent + confirmation); cash
+      // settles on delivery, so go straight to the order.
+      if (method === 'wompi') {
+        router.replace(`/pay/${order.id}`);
+      } else {
+        router.replace(`/orders/${order.id}`);
+      }
     } catch (e) {
       setError(e instanceof ApiError ? e.message : 'No se pudo crear el pedido.');
     }
@@ -117,7 +123,7 @@ export default function Cart() {
       </View>
       {method === 'wompi' && (
         <Text style={styles.hint}>
-          El pedido se crea; el checkout de Wompi se integra en un paso siguiente.
+          Al continuar te llevamos a la pantalla de pago para confirmar con Wompi.
         </Text>
       )}
 

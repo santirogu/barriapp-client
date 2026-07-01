@@ -44,6 +44,7 @@ function RootNavigator() {
       <Stack.Screen name="(auth)" options={{ headerShown: false }} />
       <Stack.Screen name="store/[id]" options={{ title: 'Tienda' }} />
       <Stack.Screen name="cart" options={{ title: 'Tu carrito', presentation: 'modal' }} />
+      <Stack.Screen name="pay/[orderId]" options={{ title: 'Pago', headerBackVisible: false }} />
       <Stack.Screen name="orders/index" options={{ title: 'Mis pedidos' }} />
       <Stack.Screen name="orders/[id]" options={{ title: 'Pedido' }} />
       <Stack.Screen name="notifications" options={{ title: 'Notificaciones' }} />
