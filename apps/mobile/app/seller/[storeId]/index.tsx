@@ -91,6 +91,10 @@ export default function ManageStore() {
 
       <View style={{ height: 8 }} />
       <Button
+        title="Pedidos de la tienda"
+        onPress={() => router.push(`/seller/${id}/orders`)}
+      />
+      <Button
         title="Gestionar productos"
         variant="ghost"
         onPress={() => router.push(`/seller/${id}/products`)}

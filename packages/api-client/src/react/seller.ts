@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import type { StoreStatus } from '@barriapp/shared';
+import type { OrderStatus, StoreStatus } from '@barriapp/shared';
 import { unwrap } from '../typed-client';
 import type { ProductCreate, ProductUpdate, StoreCreate, StoreUpdate } from '../schemas';
 import { useApiClient } from './context';
@@ -109,4 +109,67 @@ export function useDeleteProduct(storeId: string) {
       void qc.invalidateQueries({ queryKey: ['stores', storeId, 'products'] });
     },
   });
+}
+
+// --- Order queue (seller side) ----------------------------------------------
+
+/** Orders for a store the caller owns, optionally filtered by status. */
+export function useStoreOrders(storeId: string, status?: OrderStatus) {
+  const client = useApiClient();
+  return useQuery({
+    queryKey: queryKeys.storeOrders(storeId, status),
+    queryFn: () =>
+      unwrap(
+        client.GET('/api/v1/stores/{store_id}/orders', {
+          params: { path: { store_id: storeId }, query: status ? { status } : {} },
+        }),
+      ),
+    enabled: Boolean(storeId),
+  });
+}
+
+/** Seller order actions (accept, advance status, assign courier, reject). */
+export function useSellerOrderActions(storeId: string) {
+  const client = useApiClient();
+  const qc = useQueryClient();
+  const invalidate = () => {
+    void qc.invalidateQueries({ queryKey: ['stores', storeId, 'orders'] });
+    void qc.invalidateQueries({ queryKey: ['orders'] });
+  };
+
+  const accept = useMutation({
+    mutationFn: (orderId: string) =>
+      unwrap(client.POST('/api/v1/orders/{order_id}/accept', { params: { path: { order_id: orderId } } })),
+    onSuccess: invalidate,
+  });
+
+  const advance = useMutation({
+    mutationFn: ({ orderId, status }: { orderId: string; status: 'preparing' | 'ready' }) =>
+      unwrap(
+        client.POST('/api/v1/orders/{order_id}/status', {
+          params: { path: { order_id: orderId } },
+          body: { status },
+        }),
+      ),
+    onSuccess: invalidate,
+  });
+
+  const assign = useMutation({
+    mutationFn: (orderId: string) =>
+      unwrap(client.POST('/api/v1/orders/{order_id}/assign', { params: { path: { order_id: orderId } } })),
+    onSuccess: invalidate,
+  });
+
+  const reject = useMutation({
+    mutationFn: ({ orderId, reason }: { orderId: string; reason?: string }) =>
+      unwrap(
+        client.POST('/api/v1/orders/{order_id}/cancel', {
+          params: { path: { order_id: orderId } },
+          body: { reason: reason ?? null },
+        }),
+      ),
+    onSuccess: invalidate,
+  });
+
+  return { accept, advance, assign, reject };
 }
