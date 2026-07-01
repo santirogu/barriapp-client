@@ -48,6 +48,7 @@ export type SettlementPublic = S['SettlementPublic'];
 export type MetricsResponse = S['MetricsResponse'];
 export type AuditLogPublic = S['AuditLogPublic'];
 export type ConfigPublic = S['ConfigPublic'];
+export type ConfigUpdate = S['ConfigUpdate'];
 
 export type ChatRequest = S['ChatRequest'];
 export type ChatResponse = S['ChatResponse'];

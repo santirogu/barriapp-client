@@ -28,4 +28,9 @@ export const queryKeys = {
 
   delivery: (id: string) => ['deliveries', id] as const,
   collaboratorMe: () => ['collaborator', 'me'] as const,
+
+  adminMetrics: () => ['admin', 'metrics'] as const,
+  adminUsers: (params?: object) => ['admin', 'users', params ?? {}] as const,
+  auditLogs: (params?: object) => ['admin', 'audit-logs', params ?? {}] as const,
+  adminConfig: () => ['admin', 'config'] as const,
 } as const;
