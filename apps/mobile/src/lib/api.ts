@@ -1,14 +1,23 @@
-import { createHttpClient } from '@barriapp/api-client';
+import { createApiClient } from '@barriapp/api-client';
+import { createSessionStore } from '@barriapp/api-client/react';
 import { secureTokenStore } from './secure-token-store';
 
-/**
- * App-wide HTTP client. `onLogout` is wired in Phase 2 to reset the auth store
- * and redirect to the login screen; for now it clears tokens only.
- */
-export const api = createHttpClient({
+// `onLogout` must call the session store's signOut, but the store needs the
+// client — break the cycle with a mutable handler bound right after creation.
+let handleLogout = () => {};
+
+export const apiClient = createApiClient({
   baseUrl: process.env.EXPO_PUBLIC_API_URL,
   tokenStore: secureTokenStore,
-  onLogout: () => {
-    // Wired to router + auth store in Phase 2.
-  },
+  onLogout: () => handleLogout(),
 });
+
+/** App-wide session store (user + auth status + actions). */
+export const useSession = createSessionStore({
+  client: apiClient,
+  tokenStore: secureTokenStore,
+});
+
+handleLogout = () => {
+  void useSession.getState().signOut();
+};

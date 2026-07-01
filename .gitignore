@@ -40,5 +40,5 @@ yarn-error.*
 # Testing
 coverage/
 
-# Generated API types (regenerated from backend OpenAPI)
-packages/api-client/src/generated/
+# NOTE: packages/api-client/src/generated/schema.ts is intentionally COMMITTED
+# (regenerated via `pnpm api:generate`) so CI/build type-check without a live backend.

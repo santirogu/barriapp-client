@@ -152,18 +152,27 @@ importers:
       '@tanstack/react-query':
         specifier: ^5.62.11
         version: 5.101.2(react@18.3.1)
+      '@types/react':
+        specifier: ~18.3.12
+        version: 18.3.31
       eslint:
         specifier: ^9.17.0
         version: 9.39.4
       openapi-typescript:
         specifier: ^7.5.0
         version: 7.13.0(typescript@5.9.3)
+      react:
+        specifier: 18.3.1
+        version: 18.3.1
       typescript:
         specifier: ^5.7.3
         version: 5.9.3
       vitest:
         specifier: ^2.1.8
         version: 2.1.9(@types/node@20.19.43)(lightningcss@1.27.0)(terser@5.48.0)
+      zustand:
+        specifier: ^5.0.2
+        version: 5.0.14(@types/react@18.3.31)(react@18.3.1)(use-sync-external-store@1.6.0(react@18.3.1))
 
   packages/config:
     devDependencies:
