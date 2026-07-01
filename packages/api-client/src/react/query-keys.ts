@@ -7,6 +7,8 @@ export const queryKeys = {
   store: (id: string) => ['stores', id] as const,
   storeProducts: (storeId: string, params?: object) =>
     ['stores', storeId, 'products', params ?? {}] as const,
+  storeOrders: (storeId: string, status?: string) =>
+    ['stores', storeId, 'orders', status ?? 'all'] as const,
   product: (id: string) => ['products', id] as const,
   categories: (type?: string) => ['categories', type ?? 'all'] as const,
 

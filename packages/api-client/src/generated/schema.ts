@@ -217,6 +217,23 @@ export interface paths {
         patch: operations["update_store_api_v1_stores__store_id__patch"];
         trace?: never;
     };
+    "/api/v1/stores/{store_id}/orders": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Store Orders */
+        get: operations["list_store_orders_api_v1_stores__store_id__orders_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/stores/{store_id}/status": {
         parameters: {
             query?: never;
@@ -2555,6 +2572,41 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["StorePublic"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_store_orders_api_v1_stores__store_id__orders_get: {
+        parameters: {
+            query?: {
+                status?: components["schemas"]["OrderStatus"] | null;
+                page?: number;
+                limit?: number;
+            };
+            header?: never;
+            path: {
+                store_id: components["schemas"]["PydanticObjectId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OrderPublic"][];
                 };
             };
             /** @description Validation Error */
