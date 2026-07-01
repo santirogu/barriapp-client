@@ -1,6 +1,7 @@
 import { ApiError } from './errors';
 import { resolveApiUrl } from './config';
-import type { TokenStore, Tokens } from './token-store';
+import { createAuthenticatedFetch } from './auth-fetch';
+import type { TokenStore } from './token-store';
 
 export interface HttpClientOptions {
   /** Explicit base URL; falls back to EXPO_PUBLIC/NEXT_PUBLIC env, then local dev. */
@@ -19,48 +20,24 @@ export interface RequestOptions extends Omit<RequestInit, 'body'> {
   anonymous?: boolean;
 }
 
-interface RawTokenResponse {
-  access_token: string;
-  refresh_token: string;
-  token_type: string;
-}
-
 export interface HttpClient {
   request<T>(path: string, options?: RequestOptions): Promise<T>;
   baseUrl: string;
 }
 
+/**
+ * Imperative, typed-by-generic HTTP client. Wraps the shared authenticated fetch
+ * (bearer + single-flight refresh + retry) and decodes the response, throwing a
+ * typed {@link ApiError} on any non-2xx. Used for auth flows and one-off calls;
+ * the typed openapi-fetch client is used for the query hooks.
+ */
 export function createHttpClient(options: HttpClientOptions): HttpClient {
   const baseUrl = resolveApiUrl(options.baseUrl);
-  const { tokenStore, onLogout } = options;
-
-  // Single-flight refresh: concurrent 401s share one refresh round-trip.
-  let refreshInFlight: Promise<Tokens | null> | null = null;
-
-  async function refreshTokens(): Promise<Tokens | null> {
-    if (!refreshInFlight) {
-      refreshInFlight = (async () => {
-        const current = await tokenStore.getTokens();
-        if (!current?.refreshToken) return null;
-        const res = await fetch(`${baseUrl}/auth/refresh`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ refresh_token: current.refreshToken }),
-        });
-        if (!res.ok) return null;
-        const data = (await res.json()) as RawTokenResponse;
-        const next: Tokens = {
-          accessToken: data.access_token,
-          refreshToken: data.refresh_token,
-        };
-        await tokenStore.setTokens(next);
-        return next;
-      })().finally(() => {
-        refreshInFlight = null;
-      });
-    }
-    return refreshInFlight;
-  }
+  const authFetch = createAuthenticatedFetch({
+    baseUrl,
+    tokenStore: options.tokenStore,
+    onLogout: options.onLogout,
+  });
 
   function buildUrl(path: string, query?: RequestOptions['query']): string {
     const url = new URL(`${baseUrl}${path.startsWith('/') ? path : `/${path}`}`);
@@ -74,25 +51,6 @@ export function createHttpClient(options: HttpClientOptions): HttpClient {
     return url.toString();
   }
 
-  async function doFetch(
-    path: string,
-    options: RequestOptions,
-    accessToken: string | undefined,
-  ): Promise<Response> {
-    const headers = new Headers(options.headers);
-    if (options.json !== undefined) {
-      headers.set('Content-Type', 'application/json');
-    }
-    if (!options.anonymous && accessToken) {
-      headers.set('Authorization', `Bearer ${accessToken}`);
-    }
-    return fetch(buildUrl(path, options.query), {
-      ...options,
-      headers,
-      body: options.json !== undefined ? JSON.stringify(options.json) : undefined,
-    });
-  }
-
   async function parse<T>(res: Response): Promise<T> {
     const requestId = res.headers.get('X-Request-ID') ?? undefined;
     if (res.status === 204) return undefined as T;
@@ -103,28 +61,16 @@ export function createHttpClient(options: HttpClientOptions): HttpClient {
   }
 
   async function request<T>(path: string, options: RequestOptions = {}): Promise<T> {
-    const tokens = options.anonymous ? null : await tokenStore.getTokens();
-    let res = await doFetch(path, options, tokens?.accessToken);
-
-    // On an expired access token, refresh once and retry the original request.
-    if (res.status === 401 && !options.anonymous) {
-      const requestId = res.headers.get('X-Request-ID') ?? undefined;
-      const body = await res
-        .clone()
-        .json()
-        .catch(() => undefined);
-      const err = ApiError.fromResponse(401, body, requestId);
-      if (err.isInvalidToken) {
-        const refreshed = await refreshTokens();
-        if (!refreshed) {
-          await tokenStore.clear();
-          onLogout?.();
-          throw err;
-        }
-        res = await doFetch(path, options, refreshed.accessToken);
-      }
-    }
-
+    const { json, query, anonymous, headers, ...rest } = options;
+    const finalHeaders = new Headers(headers);
+    if (json !== undefined) finalHeaders.set('Content-Type', 'application/json');
+    // `anonymous` requests skip auth by not carrying a token; the shared fetch
+    // only attaches a bearer when one exists and the header is unset.
+    const res = await authFetch(buildUrl(path, query), {
+      ...rest,
+      headers: finalHeaders,
+      body: json !== undefined ? JSON.stringify(json) : undefined,
+    });
     return parse<T>(res);
   }
 

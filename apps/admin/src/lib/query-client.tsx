@@ -1,8 +1,10 @@
 'use client';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ApiProvider } from '@barriapp/api-client/react';
 import { useState, type ReactNode } from 'react';
 import { ApiError } from '@barriapp/api-client';
+import { apiClient } from './api';
 
 export function Providers({ children }: { children: ReactNode }) {
   const [client] = useState(
@@ -22,5 +24,9 @@ export function Providers({ children }: { children: ReactNode }) {
       }),
   );
 
-  return <QueryClientProvider client={client}>{children}</QueryClientProvider>;
+  return (
+    <QueryClientProvider client={client}>
+      <ApiProvider client={apiClient}>{children}</ApiProvider>
+    </QueryClientProvider>
+  );
 }

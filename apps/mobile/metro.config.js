@@ -16,4 +16,8 @@ config.resolver.nodeModulesPaths = [
 ];
 config.resolver.disableHierarchicalLookup = true;
 
+// Honor package.json "exports" so workspace subpaths like
+// `@barriapp/api-client/react` resolve.
+config.resolver.unstable_enablePackageExports = true;
+
 module.exports = config;
