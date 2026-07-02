@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import type { Role, UserStatus } from '@barriapp/shared';
+import type { Role, UserStatus, VerificationStatus } from '@barriapp/shared';
 import { unwrap } from '../typed-client';
-import type { ConfigUpdate } from '../schemas';
+import type { ConfigUpdate, GenerateSettlement } from '../schemas';
 import { useApiClient } from './context';
 import { queryKeys } from './query-keys';
 
@@ -94,5 +94,86 @@ export function useUpdateAdminConfig() {
   return useMutation({
     mutationFn: (body: ConfigUpdate) => unwrap(client.PATCH('/api/v1/admin/config', { body })),
     onSuccess: () => void qc.invalidateQueries({ queryKey: queryKeys.adminConfig() }),
+  });
+}
+
+// --- Collaborator verification queue ---------------------------------------
+
+/** Collaborator profiles for the admin verification queue, optionally filtered. */
+export function useAdminCollaborators(status?: VerificationStatus) {
+  const client = useApiClient();
+  return useQuery({
+    queryKey: ['admin', 'collaborators', status ?? 'all'],
+    queryFn: () =>
+      unwrap(
+        client.GET('/api/v1/admin/collaborators', {
+          params: { query: status ? { status } : {} },
+        }),
+      ),
+  });
+}
+
+/** Approve / reject / request-more-info on a collaborator. */
+export function useVerifyCollaborator() {
+  const client = useApiClient();
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      userId,
+      status,
+      reason,
+    }: {
+      userId: string;
+      status: VerificationStatus;
+      reason?: string;
+    }) =>
+      unwrap(
+        client.PATCH('/api/v1/collaborator/{user_id}/verification', {
+          params: { path: { user_id: userId } },
+          body: { status, reason: reason ?? null },
+        }),
+      ),
+    onSuccess: () => void qc.invalidateQueries({ queryKey: ['admin', 'collaborators'] }),
+  });
+}
+
+// --- Settlements ------------------------------------------------------------
+
+/** Seller commission settlements (admin), optionally by store. */
+export function useAdminSettlements(storeId?: string) {
+  const client = useApiClient();
+  return useQuery({
+    queryKey: ['admin', 'settlements', storeId ?? 'all'],
+    queryFn: () =>
+      unwrap(
+        client.GET('/api/v1/admin/settlements', {
+          params: { query: storeId ? { store_id: storeId } : {} },
+        }),
+      ),
+  });
+}
+
+export function useGenerateSettlement() {
+  const client = useApiClient();
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (body: GenerateSettlement) =>
+      unwrap(client.POST('/api/v1/admin/settlements', { body })),
+    onSuccess: () => void qc.invalidateQueries({ queryKey: ['admin', 'settlements'] }),
+  });
+}
+
+export function useMarkSettlementPaid() {
+  const client = useApiClient();
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ settlementId, paymentRef }: { settlementId: string; paymentRef?: string }) =>
+      unwrap(
+        client.POST('/api/v1/admin/settlements/{settlement_id}/pay', {
+          params: { path: { settlement_id: settlementId } },
+          body: { payment_ref: paymentRef ?? null },
+        }),
+      ),
+    onSuccess: () => void qc.invalidateQueries({ queryKey: ['admin', 'settlements'] }),
   });
 }

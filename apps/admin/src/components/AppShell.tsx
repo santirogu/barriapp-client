@@ -8,6 +8,8 @@ import { useSession } from '@/lib/api';
 const NAV = [
   { href: '/', label: 'Dashboard' },
   { href: '/users', label: 'Usuarios' },
+  { href: '/collaborators', label: 'Repartidores' },
+  { href: '/settlements', label: 'Liquidaciones' },
   { href: '/audit', label: 'Auditoría' },
   { href: '/config', label: 'Configuración' },
 ];
