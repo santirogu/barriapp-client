@@ -44,6 +44,7 @@ export type NotificationPublic = S['NotificationPublic'];
 
 export type SubscriptionPublic = S['SubscriptionPublic'];
 export type SettlementPublic = S['SettlementPublic'];
+export type GenerateSettlement = S['GenerateSettlement'];
 
 export type MetricsResponse = S['MetricsResponse'];
 export type AuditLogPublic = S['AuditLogPublic'];

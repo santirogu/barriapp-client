@@ -52,6 +52,11 @@ export {
   useAuditLogs,
   useAdminConfig,
   useUpdateAdminConfig,
+  useAdminCollaborators,
+  useVerifyCollaborator,
+  useAdminSettlements,
+  useGenerateSettlement,
+  useMarkSettlementPaid,
 } from './admin';
 export type { AdminUsersQuery, AuditLogsQuery, AuditModule } from './admin';
 export { usePaymentIntent, usePayment } from './payments';
