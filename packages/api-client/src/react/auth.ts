@@ -1,6 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 import { unwrap } from '../typed-client';
 import type {
+  CompleteProfileRequest,
   LoginRequest,
   RegisterRequest,
   SocialLoginRequest,
@@ -14,12 +15,25 @@ import { useApiClient } from './context';
  * store's `authenticate()` (keeps this layer platform-agnostic).
  */
 
-/** Register (phone + password + Habeas Data). Triggers an OTP; does not log in. */
+/**
+ * Register a single-role account (discriminated by `role`). Triggers an OTP;
+ * does not log in.
+ */
 export function useRegister() {
   const client = useApiClient();
   return useMutation({
     mutationFn: (body: RegisterRequest) =>
-      unwrap(client.POST('/api/v1/auth/register', { body })),
+      // openapi-fetch types the body as the discriminated union.
+      unwrap(client.POST('/api/v1/auth/register', { body: body as never })),
+  });
+}
+
+/** Complete a social account's profile (profile_incomplete → active). */
+export function useCompleteProfile() {
+  const client = useApiClient();
+  return useMutation({
+    mutationFn: (body: CompleteProfileRequest) =>
+      unwrap(client.POST('/api/v1/me/complete-profile', { body })),
   });
 }
 

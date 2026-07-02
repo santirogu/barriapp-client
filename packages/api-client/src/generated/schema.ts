@@ -164,6 +164,23 @@ export interface paths {
         patch: operations["update_me_api_v1_me_patch"];
         trace?: never;
     };
+    "/api/v1/me/complete-profile": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Complete a social-signup profile and activate the account */
+        post: operations["complete_profile_api_v1_me_complete_profile_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/stores": {
         parameters: {
             query?: never;
@@ -1246,6 +1263,38 @@ export interface components {
             /** Tools Used */
             tools_used?: string[];
         };
+        /** ClientRegister */
+        ClientRegister: {
+            /** First Name */
+            first_name: string;
+            /** Last Name */
+            last_name: string;
+            document_type: components["schemas"]["DocumentType"];
+            /** Document Number */
+            document_number: string;
+            /** Phone */
+            phone: string;
+            /**
+             * Email
+             * Format: email
+             */
+            email: string;
+            /** Password */
+            password: string;
+            /** Accept Habeas Data */
+            accept_habeas_data: boolean;
+            gender: components["schemas"]["Gender"];
+            /**
+             * Birth Date
+             * Format: date
+             */
+            birth_date: string;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            role: "client";
+        };
         /** CollaboratorDocuments */
         CollaboratorDocuments: {
             /** Id Number */
@@ -1266,6 +1315,53 @@ export interface components {
             rating: components["schemas"]["Rating"];
             /** Balance */
             balance: number;
+        };
+        /** CollaboratorRegister */
+        CollaboratorRegister: {
+            /** First Name */
+            first_name: string;
+            /** Last Name */
+            last_name: string;
+            document_type: components["schemas"]["DocumentType"];
+            /** Document Number */
+            document_number: string;
+            /** Phone */
+            phone: string;
+            /**
+             * Email
+             * Format: email
+             */
+            email: string;
+            /** Password */
+            password: string;
+            /** Accept Habeas Data */
+            accept_habeas_data: boolean;
+            gender: components["schemas"]["Gender"];
+            /**
+             * Birth Date
+             * Format: date
+             */
+            birth_date: string;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            role: "collaborator";
+        };
+        /**
+         * CompleteProfileRequest
+         * @description Fields a social-login (client) account must provide before activating.
+         */
+        CompleteProfileRequest: {
+            document_type: components["schemas"]["DocumentType"];
+            /** Document Number */
+            document_number: string;
+            gender: components["schemas"]["Gender"];
+            /**
+             * Birth Date
+             * Format: date
+             */
+            birth_date: string;
         };
         /** ConfigPublic */
         ConfigPublic: {
@@ -1376,6 +1472,12 @@ export interface components {
             /** Token */
             token: string;
         };
+        /**
+         * DocumentType
+         * @description Colombian identity document types.
+         * @enum {string}
+         */
+        DocumentType: "CC" | "CE" | "PA" | "NIT";
         /** ErrandCancel */
         ErrandCancel: {
             /** Reason */
@@ -1446,6 +1548,11 @@ export interface components {
         ErrandStatusUpdate: {
             status: components["schemas"]["ErrandStatus"];
         };
+        /**
+         * Gender
+         * @enum {string}
+         */
+        Gender: "male" | "female" | "other";
         /** GenerateSettlement */
         GenerateSettlement: {
             /** Store Id */
@@ -1849,19 +1956,6 @@ export interface components {
             /** Refresh Token */
             refresh_token: string;
         };
-        /** RegisterRequest */
-        RegisterRequest: {
-            /** Phone */
-            phone: string;
-            /** Password */
-            password: string;
-            /** Full Name */
-            full_name: string;
-            /** Email */
-            email?: string | null;
-            /** Accept Habeas Data */
-            accept_habeas_data: boolean;
-        };
         /** ReviewCreate */
         ReviewCreate: {
             /** Order Id */
@@ -1921,6 +2015,32 @@ export interface components {
             open: string;
             /** Close */
             close: string;
+        };
+        /** SellerRegister */
+        SellerRegister: {
+            /** First Name */
+            first_name: string;
+            /** Last Name */
+            last_name: string;
+            document_type: components["schemas"]["DocumentType"];
+            /** Document Number */
+            document_number: string;
+            /** Phone */
+            phone: string;
+            /**
+             * Email
+             * Format: email
+             */
+            email: string;
+            /** Password */
+            password: string;
+            /** Accept Habeas Data */
+            accept_habeas_data: boolean;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            role: "seller";
         };
         /** SettlementPublic */
         SettlementPublic: {
@@ -2094,14 +2214,21 @@ export interface components {
         UserPublic: {
             /** Id */
             id: string;
+            role: components["schemas"]["Role"];
             /** Phone */
             phone: string | null;
             /** Email */
             email: string | null;
-            /** Full Name */
-            full_name: string;
-            /** Roles */
-            roles: components["schemas"]["Role"][];
+            /** First Name */
+            first_name: string;
+            /** Last Name */
+            last_name: string;
+            document_type: components["schemas"]["DocumentType"] | null;
+            /** Document Number */
+            document_number: string | null;
+            gender: components["schemas"]["Gender"] | null;
+            /** Birth Date */
+            birth_date: string | null;
             status: components["schemas"]["UserStatus"];
             /** Avatar Url */
             avatar_url: string | null;
@@ -2110,15 +2237,17 @@ export interface components {
          * UserStatus
          * @enum {string}
          */
-        UserStatus: "pending_verification" | "active" | "suspended";
+        UserStatus: "pending_verification" | "profile_incomplete" | "active" | "suspended";
         /** UserStatusUpdate */
         UserStatusUpdate: {
             status: components["schemas"]["UserStatus"];
         };
         /** UserUpdate */
         UserUpdate: {
-            /** Full Name */
-            full_name?: string | null;
+            /** First Name */
+            first_name?: string | null;
+            /** Last Name */
+            last_name?: string | null;
             /** Email */
             email?: string | null;
             /** Avatar Url */
@@ -2235,7 +2364,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["RegisterRequest"];
+                "application/json": components["schemas"]["SellerRegister"] | components["schemas"]["ClientRegister"] | components["schemas"]["CollaboratorRegister"];
             };
         };
         responses: {
@@ -2439,6 +2568,39 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["UserUpdate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserPublic"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    complete_profile_api_v1_me_complete_profile_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CompleteProfileRequest"];
             };
         };
         responses: {

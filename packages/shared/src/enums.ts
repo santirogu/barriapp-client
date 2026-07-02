@@ -2,7 +2,15 @@
 
 export type Role = 'client' | 'seller' | 'collaborator' | 'super_admin';
 
-export type UserStatus = 'pending_verification' | 'active' | 'suspended';
+export type UserStatus =
+  | 'pending_verification'
+  | 'profile_incomplete'
+  | 'active'
+  | 'suspended';
+
+export type DocumentType = 'CC' | 'CE' | 'PA' | 'NIT';
+
+export type Gender = 'male' | 'female' | 'other';
 
 export type StoreStatus = 'open' | 'closed' | 'suspended';
 
