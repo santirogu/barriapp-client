@@ -40,7 +40,7 @@ export default function Users() {
             <tr>
               <Th>Nombre</Th>
               <Th>Teléfono</Th>
-              <Th>Roles</Th>
+              <Th>Rol</Th>
               <Th>Estado</Th>
               <Th>Acción</Th>
             </tr>
@@ -48,9 +48,11 @@ export default function Users() {
           <tbody>
             {users.map((u) => (
               <tr key={u.id} style={styles.tr}>
-                <Td>{u.full_name}</Td>
+                <Td>
+                  {u.first_name} {u.last_name}
+                </Td>
                 <Td>{u.phone ?? '—'}</Td>
-                <Td>{u.roles.join(', ')}</Td>
+                <Td>{u.role}</Td>
                 <Td>
                   <span style={{ ...styles.badge, ...(u.status === 'suspended' ? styles.badgeBad : {}) }}>
                     {STATUS_LABEL[u.status] ?? u.status}

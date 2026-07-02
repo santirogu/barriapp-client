@@ -39,7 +39,7 @@ export function AppShell({ children }: { children: ReactNode }) {
     return <div style={styles.centered}>Cargando…</div>;
   }
 
-  const isAdmin = user?.roles?.includes('super_admin');
+  const isAdmin = user?.role === 'super_admin';
   if (status === 'authenticated' && !isAdmin) {
     return (
       <div style={styles.centered}>
@@ -74,7 +74,9 @@ export function AppShell({ children }: { children: ReactNode }) {
           })}
         </nav>
         <div style={styles.sidebarFoot}>
-          <div style={styles.userName}>{user?.full_name}</div>
+          <div style={styles.userName}>
+            {user ? `${user.first_name} ${user.last_name}` : ''}
+          </div>
           <button style={styles.linkBtn} onClick={() => void signOut()}>
             Cerrar sesión
           </button>

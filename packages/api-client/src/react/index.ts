@@ -13,6 +13,7 @@ export {
 export type { StoresQuery } from './hooks';
 export {
   useRegister,
+  useCompleteProfile,
   useVerifyOtp,
   useLogin,
   useSocialLogin,

@@ -6,10 +6,15 @@ type S = components['schemas'];
 export type UserPublic = S['UserPublic'];
 export type UserUpdate = S['UserUpdate'];
 export type TokenResponse = S['TokenResponse'];
-export type RegisterRequest = S['RegisterRequest'];
 export type LoginRequest = S['LoginRequest'];
 export type VerifyOtpRequest = S['VerifyOtpRequest'];
 export type SocialLoginRequest = S['SocialLoginRequest'];
+// Single-role registration: discriminated by `role`.
+export type ClientRegister = S['ClientRegister'];
+export type SellerRegister = S['SellerRegister'];
+export type CollaboratorRegister = S['CollaboratorRegister'];
+export type RegisterRequest = ClientRegister | SellerRegister | CollaboratorRegister;
+export type CompleteProfileRequest = S['CompleteProfileRequest'];
 
 export type StorePublic = S['StorePublic'];
 export type StoreCreate = S['StoreCreate'];

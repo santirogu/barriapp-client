@@ -29,14 +29,14 @@ export default function Home() {
     >
       <View style={styles.header}>
         <View style={{ flex: 1 }}>
-          <Text style={styles.hello}>Hola, {user?.full_name ?? 'usuario'} 👋</Text>
-          <View style={styles.roles}>
-            {(user?.roles ?? []).map((r) => (
-              <View key={r} style={styles.chip}>
-                <Text style={styles.chipText}>{r}</Text>
+          <Text style={styles.hello}>Hola, {user?.first_name ?? 'usuario'} 👋</Text>
+          {user?.role && (
+            <View style={styles.roles}>
+              <View style={styles.chip}>
+                <Text style={styles.chipText}>{user.role}</Text>
               </View>
-            ))}
-          </View>
+            </View>
+          )}
         </View>
         <View style={styles.headerActions}>
           <Pressable onPress={() => router.push('/notifications')} hitSlop={8}>
@@ -55,25 +55,25 @@ export default function Home() {
         </View>
       </View>
 
-      <Pressable
-        style={({ pressed }) => [styles.sellerBanner, pressed && styles.pressed]}
-        onPress={() => router.push(user?.roles?.includes('seller') ? '/seller' : '/seller/new')}
-      >
-        <Text style={styles.sellerBannerText}>
-          {user?.roles?.includes('seller') ? '🏪  Administrar mi tienda' : '🏪  Vender en BarriApp'}
-        </Text>
-        <Text style={styles.chevron}>›</Text>
-      </Pressable>
+      {user?.role === 'seller' && (
+        <Pressable
+          style={({ pressed }) => [styles.sellerBanner, pressed && styles.pressed]}
+          onPress={() => router.push('/seller')}
+        >
+          <Text style={styles.sellerBannerText}>🏪  Administrar mi tienda</Text>
+          <Text style={styles.chevron}>›</Text>
+        </Pressable>
+      )}
 
-      <Pressable
-        style={({ pressed }) => [styles.sellerBanner, pressed && styles.pressed]}
-        onPress={() => router.push('/collaborator')}
-      >
-        <Text style={styles.sellerBannerText}>
-          {user?.roles?.includes('collaborator') ? '🛵  Modo repartidor' : '🛵  Sé repartidor'}
-        </Text>
-        <Text style={styles.chevron}>›</Text>
-      </Pressable>
+      {user?.role === 'collaborator' && (
+        <Pressable
+          style={({ pressed }) => [styles.sellerBanner, pressed && styles.pressed]}
+          onPress={() => router.push('/collaborator')}
+        >
+          <Text style={styles.sellerBannerText}>🛵  Modo repartidor</Text>
+          <Text style={styles.chevron}>›</Text>
+        </Pressable>
+      )}
 
       <Pressable
         style={({ pressed }) => [styles.sellerBanner, pressed && styles.pressed]}

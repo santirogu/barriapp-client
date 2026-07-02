@@ -10,6 +10,7 @@ import { apiClient, useSession } from '@/lib/api';
 
 function RootNavigator() {
   const status = useSession((s) => s.status);
+  const user = useSession((s) => s.user);
   const bootstrap = useSession((s) => s.bootstrap);
   const segments = useSegments();
   const router = useRouter();
@@ -18,17 +19,21 @@ function RootNavigator() {
     void bootstrap();
   }, [bootstrap]);
 
-  // Redirect based on auth state: unauthenticated → (auth) group; authenticated
-  // users bounced out of the auth group back to the app.
+  // Redirect based on auth state and account status.
   useEffect(() => {
     if (status === 'loading') return;
     const inAuthGroup = segments[0] === '(auth)';
+    const onCompleteProfile = segments[0] === 'complete-profile';
+    const incomplete = user?.status === 'profile_incomplete';
     if (status === 'unauthenticated' && !inAuthGroup) {
       router.replace('/login');
-    } else if (status === 'authenticated' && inAuthGroup) {
+    } else if (status === 'authenticated' && incomplete && !onCompleteProfile) {
+      // Social accounts must finish their profile before using the app.
+      router.replace('/complete-profile');
+    } else if (status === 'authenticated' && !incomplete && (inAuthGroup || onCompleteProfile)) {
       router.replace('/');
     }
-  }, [status, segments, router]);
+  }, [status, user, segments, router]);
 
   if (status === 'loading') {
     return (
@@ -42,6 +47,7 @@ function RootNavigator() {
     <Stack screenOptions={{ headerTintColor: '#166b3a' }}>
       <Stack.Screen name="index" options={{ headerShown: false }} />
       <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+      <Stack.Screen name="complete-profile" options={{ headerShown: false }} />
       <Stack.Screen name="store/[id]" options={{ title: 'Tienda' }} />
       <Stack.Screen name="cart" options={{ title: 'Tu carrito', presentation: 'modal' }} />
       <Stack.Screen name="pay/[orderId]" options={{ title: 'Pago', headerBackVisible: false }} />
