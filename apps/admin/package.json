@@ -15,7 +15,7 @@
     "@barriapp/api-client": "workspace:*",
     "@barriapp/shared": "workspace:*",
     "@tanstack/react-query": "^5.62.11",
-    "next": "14.2.21",
+    "next": "15.5.18",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "zustand": "^5.0.2"
