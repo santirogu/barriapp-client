@@ -9,7 +9,8 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.barriapp.app"
+      "bundleIdentifier": "com.barriapp.app",
+      "usesAppleSignIn": true
     },
     "android": {
       "package": "com.barriapp.app"

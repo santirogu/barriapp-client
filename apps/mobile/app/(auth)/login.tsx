@@ -4,6 +4,7 @@ import { View } from 'react-native';
 import { ApiError } from '@barriapp/api-client';
 import { useLogin } from '@barriapp/api-client/react';
 import { Button, ErrorText, Field, Screen, Subtitle, Title } from '@/components/ui';
+import { SocialButtons } from '@/components/SocialButtons';
 import { useSession } from '@/lib/api';
 
 export default function Login() {
@@ -57,6 +58,8 @@ export default function Login() {
       <ErrorText>{error}</ErrorText>
 
       <Button title="Entrar" onPress={onSubmit} loading={login.isPending} />
+
+      <SocialButtons />
 
       <View style={{ alignItems: 'center', marginTop: 8 }}>
         <Link href="/register" style={{ color: '#1f8a4c', fontWeight: '600' }}>
