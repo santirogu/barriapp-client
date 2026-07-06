@@ -19,7 +19,7 @@
     "typecheck": "echo \"(config) nothing to typecheck\""
   },
   "devDependencies": {
-    "@eslint/js": "^9.17.0",
+    "@eslint/js": "^10.0.1",
     "typescript-eslint": "^8.19.1",
     "eslint": "^9.17.0"
   }
