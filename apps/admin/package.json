@@ -14,15 +14,15 @@
   "dependencies": {
     "@barriapp/api-client": "workspace:*",
     "@barriapp/shared": "workspace:*",
-    "@tanstack/react-query": "^5.62.11",
-    "next": "^15.5.20",
+    "@tanstack/react-query": "^5.101.4",
+    "next": "^15.5.23",
     "react": "18.3.1",
     "react-dom": "18.3.1",
-    "zustand": "^5.0.2"
+    "zustand": "^5.0.15"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3.2.0",
-    "@playwright/test": "^1.49.1",
+    "@eslint/eslintrc": "^3.3.6",
+    "@playwright/test": "^1.62.1",
     "@types/node": "^20.17.10",
     "@types/react": "~18.3.12",
     "@types/react-dom": "~18.3.1",
